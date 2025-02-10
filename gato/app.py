@@ -11,9 +11,10 @@ def main():
     numeros =[str(i) for i in range(1,10)]
     corriendo = True
     while corriendo:
-        dsimbolos = {x:x for x in numeros}
+        numeros = [str(i) for i in range(1, 10)]
+        dsimbolos = {x: x for x in numeros}
         g = tablero.juego(dsimbolos)
-        tablero.actualiza_score(score,g)
+        tablero.actualiza_score(score, g)
         tablero.despliega_tablero(score)
         seguir = input('¿Quieres seguir? (s/n): ')
         if seguir.lower() == 'n':

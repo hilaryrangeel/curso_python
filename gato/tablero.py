@@ -13,14 +13,94 @@ def dibuja_tablero(simbolos:dict):
     {simbolos['7']} | {simbolos['8']} | {simbolos['9']}
     ''')
 
-def ia(simbolos:dict):
-    ''' Estrategia de la computadora'''
-    ocupado = True
-    while ocupado is True:
-        x = random.choice(list(simbolos.keys()))
-        if simbolos[x] not in ['X','O']:
-            simbolos[x] = 'O'
-            ocupado = False
+def ia(simbolos: dict):
+    ''' Estrategia mejorada de la computadora '''
+    def hay_ganador(tablero, jugador):
+        ''' Verifica si el jugador puede ganar en la siguiente jugada '''
+        combinaciones = [('1', '2', '3'), ('4', '5', '6'), ('7', '8', '9'),  # Filas
+                         ('1', '4', '7'), ('2', '5', '8'), ('3', '6', '9'),  # Columnas
+                         ('1', '5', '9'), ('3', '5', '7')]  # Diagonales
+        for a, b, c in combinaciones:
+            if tablero[a] == tablero[b] == jugador and tablero[c] not in ['X', 'O']:
+                return c
+            if tablero[a] == tablero[c] == jugador and tablero[b] not in ['X', 'O']:
+                return b
+            if tablero[b] == tablero[c] == jugador and tablero[a] not in ['X', 'O']:
+                return a
+        return None
+
+    # 1. Intentar ganar
+    movimiento = hay_ganador(simbolos, 'O')
+    if movimiento:
+        simbolos[movimiento] = 'O'
+        return
+
+    # 2. Bloquear al oponente si va a ganar
+    movimiento = hay_ganador(simbolos, 'X')
+    if movimiento:
+        simbolos[movimiento] = 'O'
+        return
+
+    # 3. Tomar el centro si está libre
+    if simbolos['5'] not in ['X', 'O']:
+        simbolos['5'] = 'O'
+        return
+
+    # 4. Intentar jugar en una esquina
+    esquinas = ['1', '3', '7', '9']
+    esquinas_libres = [e for e in esquinas if simbolos[e] not in ['X', 'O']]
+    if esquinas_libres:
+        simbolos[random.choice(esquinas_libres)] = 'O'
+        return
+
+    # 5. Jugar en cualquier otro espacio libre
+    espacios_libres = [k for k in simbolos.keys() if simbolos[k] not in ['X', 'O']]
+    if espacios_libres:
+        simbolos[random.choice(espacios_libres)] = 'O'
+
+    ''' Estrategia mejorada de la computadora '''
+    def hay_ganador(tablero, jugador):
+        ''' Verifica si el jugador puede ganar en la siguiente jugada '''
+        combinaciones = [(1, 2, 3), (4, 5, 6), (7, 8, 9),  # Filas
+                         (1, 4, 7), (2, 5, 8), (3, 6, 9),  # Columnas
+                         (1, 5, 9), (3, 5, 7)]  # Diagonales
+        for a, b, c in combinaciones:
+            if tablero[a] == tablero[b] == jugador and tablero[c] not in ['X', 'O']:
+                return c
+            if tablero[a] == tablero[c] == jugador and tablero[b] not in ['X', 'O']:
+                return b
+            if tablero[b] == tablero[c] == jugador and tablero[a] not in ['X', 'O']:
+                return a
+        return None
+
+    # 1. Intentar ganar
+    movimiento = hay_ganador(simbolos, 'O')
+    if movimiento:
+        simbolos[movimiento] = 'O'
+        return
+
+    # 2. Bloquear al oponente si va a ganar
+    movimiento = hay_ganador(simbolos, 'X')
+    if movimiento:
+        simbolos[movimiento] = 'O'
+        return
+
+    # 3. Tomar el centro si está libre
+    if simbolos[5] not in ['X', 'O']:
+        simbolos[5] = 'O'
+        return
+
+    # 4. Intentar jugar en una esquina
+    esquinas = [1, 3, 7, 9]
+    esquinas_libres = [e for e in esquinas if simbolos[e] not in ['X', 'O']]
+    if esquinas_libres:
+        simbolos[random.choice(esquinas_libres)] = 'O'
+        return
+
+    # 5. Jugar en cualquier otro espacio libre
+    espacios_libres = [k for k in simbolos.keys() if simbolos[k] not in ['X', 'O']]
+    if espacios_libres:
+        simbolos[random.choice(espacios_libres)] = 'O'
 
 def usuario(simbolos:dict):
     ''' Estrategia del usuario '''
